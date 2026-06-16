@@ -2,7 +2,20 @@
 
 WhatsApp-first lead conversion copilot for Bahamas charter and tour operators.
 
-## Product Wedge
+## Start Here
+
+This repo contains both the application and the business context for the idea.
+
+Read these before making product decisions:
+
+- [docs/00-overview.md](docs/00-overview.md) - business idea, customer, wedge, and long-term path
+- [docs/01-product-strategy.md](docs/01-product-strategy.md) - sequencing, positioning, trust model, and moat
+- [docs/02-mvp-spec.md](docs/02-mvp-spec.md) - first build scope and product requirements
+- [docs/03-go-to-market.md](docs/03-go-to-market.md) - validation plan, first customers, pricing, and sales script
+- [docs/04-research-notes.md](docs/04-research-notes.md) - assumptions, sources, and open questions
+- [docs/05-agent-handoff.md](docs/05-agent-handoff.md) - compact context for Claude Code, Codex, or other agents
+
+## Current Product Wedge
 
 The first product should help a charter captain turn a messy WhatsApp inquiry into a professional reply and quote in under 60 seconds.
 
@@ -31,6 +44,13 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+## Verification
+
+```bash
+npm run lint
+npm run build
+```
 
 ## Stack
 
