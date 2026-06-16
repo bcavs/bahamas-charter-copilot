@@ -1,9 +1,9 @@
-// Static operator profile for the local prototype.
+// Static operator profile for the prototype.
 //
 // This stands in for the data a captain will eventually enter during operator
-// setup (see docs/02-mvp-spec.md). Keeping it as plain data lets the extraction
-// and drafting logic stay deterministic and easy to test before any AI or
-// persistence is added.
+// setup (see docs/02-mvp-spec.md). The sample operator is Nassau-based — the
+// first sales focus (see docs/03-go-to-market.md) — so trips, pickup areas,
+// and routes reflect what a New Providence captain realistically runs.
 
 export type Activity =
   | "snorkeling"
@@ -45,21 +45,17 @@ export const sampleOperator: OperatorProfile = {
   captainName: "Captain Andre",
   homeIsland: "Nassau",
   whatsappNumber: "+1 242 555 0123",
-  pickupAreas: ["Nassau Harbour", "Paradise Island", "Atlantis Marina"],
+  pickupAreas: [
+    "Nassau Harbour",
+    "Paradise Island",
+    "Atlantis Marina",
+    "Palm Cay Marina",
+  ],
   tone: "warm",
   depositRule: "30% deposit confirms the date",
-  cancellationPolicy: "Full refund with 48 hours notice, weather reschedules are free",
+  cancellationPolicy:
+    "Full refund with 48 hours notice, weather reschedules are free",
   trips: [
-    {
-      id: "pig-beach-snorkel",
-      name: "Pig Beach & Snorkel Day",
-      activities: ["swimming pigs", "snorkeling", "sandbar"],
-      durationHours: 8,
-      basePrice: 1450,
-      priceBasis: "per charter",
-      maxGuests: 8,
-      inclusions: ["Snorkel gear", "Lunch & drinks", "Pig Beach + sandbar stops"],
-    },
     {
       id: "reef-snorkel-half-day",
       name: "Reef Snorkel Half-Day",
@@ -68,7 +64,31 @@ export const sampleOperator: OperatorProfile = {
       basePrice: 750,
       priceBasis: "per charter",
       maxGuests: 8,
-      inclusions: ["Snorkel gear", "Cold drinks", "Two reef stops"],
+      inclusions: ["Snorkel gear", "Cold drinks", "Rose Island reef stops"],
+    },
+    {
+      id: "rose-island-beach-day",
+      name: "Rose Island Beach & Sandbar Day",
+      activities: ["sandbar", "snorkeling"],
+      durationHours: 6,
+      basePrice: 1100,
+      priceBasis: "per charter",
+      maxGuests: 10,
+      inclusions: ["Beach + sandbar stops", "Lunch & drinks", "Snorkel gear"],
+    },
+    {
+      id: "exuma-pigs-day-trip",
+      name: "Exuma Pigs & Cays Day Trip",
+      activities: ["swimming pigs", "snorkeling", "island hopping", "sandbar"],
+      durationHours: 9,
+      basePrice: 2200,
+      priceBasis: "per charter",
+      maxGuests: 8,
+      inclusions: [
+        "Long-range powerboat from Nassau",
+        "Pig Beach + multi-cay route",
+        "Lunch & drinks",
+      ],
     },
     {
       id: "offshore-fishing",
@@ -81,24 +101,14 @@ export const sampleOperator: OperatorProfile = {
       inclusions: ["Rods & tackle", "Bait", "Catch cleaning"],
     },
     {
-      id: "sunset-sandbar-cruise",
-      name: "Sunset Sandbar Cruise",
-      activities: ["sunset cruise", "sandbar"],
-      durationHours: 3,
-      basePrice: 650,
+      id: "sunset-harbour-cruise",
+      name: "Sunset Harbour Cruise",
+      activities: ["sunset cruise"],
+      durationHours: 2.5,
+      basePrice: 600,
       priceBasis: "per charter",
-      maxGuests: 10,
-      inclusions: ["Drinks & music", "Sandbar stop", "Photos"],
-    },
-    {
-      id: "island-hopping-full-day",
-      name: "Exuma Island Hopping",
-      activities: ["island hopping", "swimming pigs", "snorkeling", "sandbar"],
-      durationHours: 9,
-      basePrice: 1650,
-      priceBasis: "per charter",
-      maxGuests: 8,
-      inclusions: ["Multi-island route", "Lunch & drinks", "Snorkel gear"],
+      maxGuests: 12,
+      inclusions: ["Drinks & music", "Paradise Island skyline", "Photos"],
     },
   ],
 };

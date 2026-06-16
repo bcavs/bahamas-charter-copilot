@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { buildDraftReply, buildWhatsAppLink } from "@/lib/draft";
-import { extractLead } from "@/lib/extraction";
-import { sampleOperator } from "@/lib/operator";
+import type { ExtractedLead } from "@/lib/extraction";
 
 const SAMPLE_INQUIRIES = [
   "Hey can you take 6 people out next Friday for snorkeling maybe pigs too?",
   "Hi! Looking for a half day fishing trip for 4 of us tomorrow morning, pickup at Atlantis. What's the cost?",
-  "Do you do sunset cruises? Party of 9 this Saturday evening for a birthday 🎉",
+  "good afternoon 👋 my husband and i are celebrating our anniversary sat, would love something chilled on the water around sunset, maybe 8-10 of us incl friends. do u have anything?",
 ];
 
 const CONFIDENCE_STYLES: Record<string, string> = {
@@ -18,32 +16,54 @@ const CONFIDENCE_STYLES: Record<string, string> = {
   low: "bg-black/15 text-black/70",
 };
 
+type AnalyzeResponse = {
+  lead: ExtractedLead;
+  draft: string;
+  source: "ai" | "rules";
+};
+
 export default function InquiryConsole() {
   const [inquiry, setInquiry] = useState(SAMPLE_INQUIRIES[0]);
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const trimmed = inquiry.trim();
+  async function handleAnalyze() {
+    const text = inquiry.trim();
+    if (!text || loading) return;
 
-  const lead = useMemo(
-    () => (trimmed ? extractLead(trimmed, sampleOperator) : null),
-    [trimmed],
-  );
-
-  const draft = useMemo(
-    () => (lead ? buildDraftReply(lead, sampleOperator) : ""),
-    [lead],
-  );
+    setLoading(true);
+    setError(null);
+    setCopied(false);
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inquiry: text }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const data: AnalyzeResponse = await res.json();
+      setResult(data);
+    } catch {
+      setError("Could not generate a reply. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleCopy() {
-    if (!draft) return;
+    if (!result?.draft) return;
     try {
-      await navigator.clipboard.writeText(draft);
+      await navigator.clipboard.writeText(result.draft);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
   }
+
+  const lead = result?.lead ?? null;
 
   const fields: Array<[string, string]> = lead
     ? [
@@ -69,7 +89,7 @@ export default function InquiryConsole() {
           >
             Paste a WhatsApp inquiry
           </label>
-          {lead && (
+          {result && lead && (
             <span
               className={`rounded-full px-2.5 py-1 text-xs font-semibold ${CONFIDENCE_STYLES[lead.confidence]}`}
             >
@@ -97,14 +117,28 @@ export default function InquiryConsole() {
             </button>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={handleAnalyze}
+          disabled={loading || inquiry.trim().length === 0}
+          className="mt-4 h-11 w-full rounded-md bg-[#1b6b5f] px-4 text-sm font-semibold text-white transition active:scale-[0.99] disabled:opacity-50 sm:w-auto"
+        >
+          {loading ? "Reading inquiry…" : "Generate reply"}
+        </button>
+        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       </div>
 
-      {lead && (
+      {result && lead && (
         <>
           <div className="rounded-lg border border-black/10 bg-white p-4 shadow-sm sm:p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1b6b5f]">
-              Extracted lead
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1b6b5f]">
+                Extracted lead
+              </p>
+              <span className="text-[11px] text-black/45">
+                {result.source === "ai" ? "AI" : "Offline rules"}
+              </span>
+            </div>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {fields.map(([label, value]) => (
                 <div key={label} className="rounded-md bg-[#faf8f1] p-3">
@@ -149,7 +183,7 @@ export default function InquiryConsole() {
               </span>
             </div>
             <p className="mt-3 whitespace-pre-line rounded-md bg-[#faf8f1] p-3 text-sm leading-6">
-              {draft}
+              {result.draft}
             </p>
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button
@@ -160,7 +194,7 @@ export default function InquiryConsole() {
                 {copied ? "Copied ✓" : "Copy reply"}
               </button>
               <a
-                href={buildWhatsAppLink(draft)}
+                href={`https://wa.me/?text=${encodeURIComponent(result.draft)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-11 items-center justify-center rounded-md border border-black/15 px-4 text-sm font-semibold transition hover:border-[#1b6b5f] hover:text-[#1b6b5f]"

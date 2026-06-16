@@ -33,31 +33,27 @@ The first product should help a captain turn a messy WhatsApp inquiry into a pro
 
 ## Current Repo State
 
-The app is a Next.js App Router project. Milestone 1 (interactive local prototype) is built.
+The app is a Next.js App Router project. Milestones 1 (interactive prototype) and 2 (AI extraction + drafting) are built. The sample operator is Nassau-based — the first sales focus.
 
 Structure:
 
-- `src/lib/operator.ts` — static operator profile and trip menu (typed sample data).
-- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), no AI. Returns date phrase, group size, activities, pickup, budget, timing, missing fields, suggested trip, and confidence.
-- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`. Never invents availability or a final price; asks only for missing details.
-- `src/components/InquiryConsole.tsx` — client component: textarea, sample inquiries, live extracted-lead panel, draft reply, working copy button, open-in-WhatsApp link.
-- `src/app/page.tsx` — server component shell (setup context + sales promise) mounting the console.
+- `src/lib/operator.ts` — static Nassau operator profile and trip menu (typed sample data).
+- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), no AI. Used as the offline fallback. Returns date phrase, group size, activities, pickup, budget, timing, missing fields, suggested trip, and confidence.
+- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`. Used as the offline fallback. Never invents availability or a final price.
+- `src/lib/ai.ts` — server-only AI analysis (`analyzeInquiryWithAI`). One Claude call (`messages.parse` + a Zod structured-output schema) extracts the lead and writes the draft. Returns the same `ExtractedLead` shape. Model defaults to `claude-opus-4-8`, overridable via `ANTHROPIC_MODEL`. Throws when no key/on error so the route can fall back.
+- `src/app/api/analyze/route.ts` — `POST /api/analyze`. Tries AI, falls back to the deterministic rules engine; response includes `source: "ai" | "rules"`.
+- `src/components/InquiryConsole.tsx` — client component: textarea, sample inquiries, "Generate reply" button that calls the API with a loading state, extracted-lead panel, draft reply, copy + open-in-WhatsApp.
+- `src/app/page.tsx` — server component shell mounting the console.
+- `.env.example` — `ANTHROPIC_API_KEY` (enables AI) and optional `ANTHROPIC_MODEL`.
 
-The extraction return type is deliberately stable so Milestone 2 can swap in an AI route behind the same shape.
+Without `ANTHROPIC_API_KEY` the app still works end-to-end via the rules fallback (the demo never returns empty).
 
 ## Next Recommended Product Work
 
-Milestone 2 — AI extraction and drafting:
-
-1. Add a server route that takes inquiry text + operator profile and returns the same `ExtractedLead` shape plus a draft reply.
-2. Use structured output validation; fall back to the deterministic logic when no API key is configured.
-3. Keep the captain-approval trust model intact.
-
-After that:
-
-1. Add operator setup persistence (database + real profile/trip editing).
-2. Add lead tracking and status pipeline.
-3. Add quote links.
+1. Operator setup persistence (database + real profile/trip editing) so the Nassau profile isn't hardcoded.
+2. Lead tracking and a status pipeline (new / needs info / quoted / follow-up / won / lost).
+3. Quote links (public quote page per lead).
+4. Optional: prompt caching of the operator profile/system prompt once setup persistence lands, to cut per-inquiry cost.
 
 ## Design Principles
 

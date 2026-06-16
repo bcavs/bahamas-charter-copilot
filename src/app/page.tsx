@@ -22,7 +22,7 @@ export default function Home() {
             </h1>
           </div>
           <div className="hidden rounded-full border border-black/10 bg-white/70 px-4 py-2 text-sm font-medium text-black/70 sm:block">
-            Live prototype
+            Nassau · AI demo
           </div>
         </header>
 
