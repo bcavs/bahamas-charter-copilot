@@ -33,34 +33,31 @@ The first product should help a captain turn a messy WhatsApp inquiry into a pro
 
 ## Current Repo State
 
-The app is a Next.js App Router project with a static prototype shell at `src/app/page.tsx`.
+The app is a Next.js App Router project. Milestone 1 (interactive local prototype) is built.
 
-The prototype currently shows:
+Structure:
 
-- operator setup inputs conceptually
-- sample incoming WhatsApp message
-- extracted fields
-- draft reply
-- copy/open WhatsApp actions
+- `src/lib/operator.ts` — static operator profile and trip menu (typed sample data).
+- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), no AI. Returns date phrase, group size, activities, pickup, budget, timing, missing fields, suggested trip, and confidence.
+- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`. Never invents availability or a final price; asks only for missing details.
+- `src/components/InquiryConsole.tsx` — client component: textarea, sample inquiries, live extracted-lead panel, draft reply, working copy button, open-in-WhatsApp link.
+- `src/app/page.tsx` — server component shell (setup context + sales promise) mounting the console.
+
+The extraction return type is deliberately stable so Milestone 2 can swap in an AI route behind the same shape.
 
 ## Next Recommended Product Work
 
-Build an interactive local prototype:
+Milestone 2 — AI extraction and drafting:
 
-1. Add a textarea for pasted inquiry text.
-2. Add static operator/trip data.
-3. Implement deterministic extraction for obvious fields.
-4. Generate a draft reply from local rules.
-5. Add a working copy button.
-6. Keep it mobile-first.
+1. Add a server route that takes inquiry text + operator profile and returns the same `ExtractedLead` shape plus a draft reply.
+2. Use structured output validation; fall back to the deterministic logic when no API key is configured.
+3. Keep the captain-approval trust model intact.
 
 After that:
 
-1. Add an AI route for extraction and drafting.
-2. Add structured output validation.
-3. Add operator setup persistence.
-4. Add lead tracking.
-5. Add quote links.
+1. Add operator setup persistence (database + real profile/trip editing).
+2. Add lead tracking and status pipeline.
+3. Add quote links.
 
 ## Design Principles
 
