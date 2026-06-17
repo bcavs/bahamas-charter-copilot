@@ -16,17 +16,7 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod/v4";
 
 import type { ExtractedLead } from "./extraction";
-import type { Activity, OperatorProfile } from "./operator";
-
-const ACTIVITIES: [Activity, ...Activity[]] = [
-  "snorkeling",
-  "swimming pigs",
-  "fishing",
-  "scuba",
-  "island hopping",
-  "sunset cruise",
-  "sandbar",
-];
+import { ACTIVITIES, type OperatorProfile } from "./operator";
 
 // Default to the most capable model; let operators tune cost via env without a
 // code change (e.g. ANTHROPIC_MODEL=claude-haiku-4-5).

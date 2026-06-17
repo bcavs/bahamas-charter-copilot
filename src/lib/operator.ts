@@ -5,14 +5,17 @@
 // first sales focus (see docs/03-go-to-market.md) — so trips, pickup areas,
 // and routes reflect what a New Providence captain realistically runs.
 
-export type Activity =
-  | "snorkeling"
-  | "swimming pigs"
-  | "fishing"
-  | "scuba"
-  | "island hopping"
-  | "sunset cruise"
-  | "sandbar";
+export const ACTIVITIES = [
+  "snorkeling",
+  "swimming pigs",
+  "fishing",
+  "scuba",
+  "island hopping",
+  "sunset cruise",
+  "sandbar",
+] as const;
+
+export type Activity = (typeof ACTIVITIES)[number];
 
 export type Trip = {
   id: string;

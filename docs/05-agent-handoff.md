@@ -33,27 +33,31 @@ The first product should help a captain turn a messy WhatsApp inquiry into a pro
 
 ## Current Repo State
 
-The app is a Next.js App Router project. Milestones 1 (interactive prototype) and 2 (AI extraction + drafting) are built. The sample operator is Nassau-based — the first sales focus.
+The app is a Next.js App Router project. Built so far: Milestone 1 (interactive prototype), Milestone 2 (AI extraction + drafting), and editable operator setup. The default sample operator is Nassau-based — the first sales focus.
 
 Structure:
 
-- `src/lib/operator.ts` — static Nassau operator profile and trip menu (typed sample data).
-- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), no AI. Used as the offline fallback. Returns date phrase, group size, activities, pickup, budget, timing, missing fields, suggested trip, and confidence.
-- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`. Used as the offline fallback. Never invents availability or a final price.
-- `src/lib/ai.ts` — server-only AI analysis (`analyzeInquiryWithAI`). One Claude call (`messages.parse` + a Zod structured-output schema) extracts the lead and writes the draft. Returns the same `ExtractedLead` shape. Model defaults to `claude-opus-4-8`, overridable via `ANTHROPIC_MODEL`. Throws when no key/on error so the route can fall back.
-- `src/app/api/analyze/route.ts` — `POST /api/analyze`. Tries AI, falls back to the deterministic rules engine; response includes `source: "ai" | "rules"`.
-- `src/components/InquiryConsole.tsx` — client component: textarea, sample inquiries, "Generate reply" button that calls the API with a loading state, extracted-lead panel, draft reply, copy + open-in-WhatsApp.
-- `src/app/page.tsx` — server component shell mounting the console.
+- `src/lib/operator.ts` — operator/trip types, the `ACTIVITIES` tuple, and the Nassau `sampleOperator` default.
+- `src/lib/operatorSchema.ts` — Zod schema (`operatorProfileSchema`) for validating profiles from storage and request bodies. Isomorphic (no server-only imports).
+- `src/lib/operatorStore.ts` — browser-backed profile store read via `useSyncExternalStore` (hydration-safe, no setState-in-effect). `writeOperator` persists to localStorage and notifies subscribers.
+- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), the offline fallback.
+- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`, the offline fallback. Never invents availability or a final price.
+- `src/lib/ai.ts` — server-only AI analysis (`analyzeInquiryWithAI`). One Claude call (`messages.parse` + a Zod structured-output schema) extracts the lead and writes the draft, using whatever operator profile it's passed. Model defaults to `claude-opus-4-8`, overridable via `ANTHROPIC_MODEL`. Throws on no key/error so the route can fall back.
+- `src/app/api/analyze/route.ts` — `POST /api/analyze`. Validates the `operator` in the body (falls back to `sampleOperator` if missing/malformed), tries AI, falls back to the rules engine; response includes `source: "ai" | "rules"`.
+- `src/components/Workspace.tsx` — client parent that owns operator state (via the store) and renders the setup editor + console.
+- `src/components/OperatorSetup.tsx` — editable profile + trip-menu form (collapsible, mobile-first, persisted to this device).
+- `src/components/InquiryConsole.tsx` — takes the operator as a prop, sends it with each request; "Generate reply" button, lead panel, draft, copy + open-in-WhatsApp.
+- `src/app/page.tsx` — server component shell mounting `Workspace`.
 - `.env.example` — `ANTHROPIC_API_KEY` (enables AI) and optional `ANTHROPIC_MODEL`.
 
-Without `ANTHROPIC_API_KEY` the app still works end-to-end via the rules fallback (the demo never returns empty).
+Operator setup is stored in the browser (localStorage) only — there is no backend persistence yet, so profiles don't sync across devices. Without `ANTHROPIC_API_KEY` the app still works end-to-end via the rules fallback.
 
 ## Next Recommended Product Work
 
-1. Operator setup persistence (database + real profile/trip editing) so the Nassau profile isn't hardcoded.
-2. Lead tracking and a status pipeline (new / needs info / quoted / follow-up / won / lost).
-3. Quote links (public quote page per lead).
-4. Optional: prompt caching of the operator profile/system prompt once setup persistence lands, to cut per-inquiry cost.
+1. Lead tracking and a status pipeline (new / needs info / quoted / follow-up / won / lost). Save each analyzed inquiry as a lead.
+2. Quote links (public quote page per lead).
+3. Backend persistence for operator profiles + leads (replace localStorage) once there are design partners; deploy to a URL for in-person demos.
+4. Optional: prompt-cache the operator system prompt to cut per-inquiry cost.
 
 ## Design Principles
 

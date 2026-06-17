@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { ExtractedLead } from "@/lib/extraction";
+import type { OperatorProfile } from "@/lib/operator";
 
 const SAMPLE_INQUIRIES = [
   "Hey can you take 6 people out next Friday for snorkeling maybe pigs too?",
@@ -22,7 +23,11 @@ type AnalyzeResponse = {
   source: "ai" | "rules";
 };
 
-export default function InquiryConsole() {
+export default function InquiryConsole({
+  operator,
+}: {
+  operator: OperatorProfile;
+}) {
   const [inquiry, setInquiry] = useState(SAMPLE_INQUIRIES[0]);
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +45,7 @@ export default function InquiryConsole() {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inquiry: text }),
+        body: JSON.stringify({ inquiry: text, operator }),
       });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
       const data: AnalyzeResponse = await res.json();
