@@ -33,34 +33,31 @@ The first product should help a captain turn a messy WhatsApp inquiry into a pro
 
 ## Current Repo State
 
-The app is a Next.js App Router project with a static prototype shell at `src/app/page.tsx`.
+The app is a Next.js App Router project. Built so far: Milestone 1 (interactive prototype), Milestone 2 (AI extraction + drafting), and editable operator setup. The default sample operator is Nassau-based — the first sales focus.
 
-The prototype currently shows:
+Structure:
 
-- operator setup inputs conceptually
-- sample incoming WhatsApp message
-- extracted fields
-- draft reply
-- copy/open WhatsApp actions
+- `src/lib/operator.ts` — operator/trip types, the `ACTIVITIES` tuple, and the Nassau `sampleOperator` default.
+- `src/lib/operatorSchema.ts` — Zod schema (`operatorProfileSchema`) for validating profiles from storage and request bodies. Isomorphic (no server-only imports).
+- `src/lib/operatorStore.ts` — browser-backed profile store read via `useSyncExternalStore` (hydration-safe, no setState-in-effect). `writeOperator` persists to localStorage and notifies subscribers.
+- `src/lib/extraction.ts` — deterministic lead extraction (`extractLead`), the offline fallback.
+- `src/lib/draft.ts` — rule-based draft reply (`buildDraftReply`) plus `buildWhatsAppLink`, the offline fallback. Never invents availability or a final price.
+- `src/lib/ai.ts` — server-only AI analysis (`analyzeInquiryWithAI`). One Claude call (`messages.parse` + a Zod structured-output schema) extracts the lead and writes the draft, using whatever operator profile it's passed. Model defaults to `claude-opus-4-8`, overridable via `ANTHROPIC_MODEL`. Throws on no key/error so the route can fall back.
+- `src/app/api/analyze/route.ts` — `POST /api/analyze`. Validates the `operator` in the body (falls back to `sampleOperator` if missing/malformed), tries AI, falls back to the rules engine; response includes `source: "ai" | "rules"`.
+- `src/components/Workspace.tsx` — client parent that owns operator state (via the store) and renders the setup editor + console.
+- `src/components/OperatorSetup.tsx` — editable profile + trip-menu form (collapsible, mobile-first, persisted to this device).
+- `src/components/InquiryConsole.tsx` — takes the operator as a prop, sends it with each request; "Generate reply" button, lead panel, draft, copy + open-in-WhatsApp.
+- `src/app/page.tsx` — server component shell mounting `Workspace`.
+- `.env.example` — `ANTHROPIC_API_KEY` (enables AI) and optional `ANTHROPIC_MODEL`.
+
+Operator setup is stored in the browser (localStorage) only — there is no backend persistence yet, so profiles don't sync across devices. Without `ANTHROPIC_API_KEY` the app still works end-to-end via the rules fallback.
 
 ## Next Recommended Product Work
 
-Build an interactive local prototype:
-
-1. Add a textarea for pasted inquiry text.
-2. Add static operator/trip data.
-3. Implement deterministic extraction for obvious fields.
-4. Generate a draft reply from local rules.
-5. Add a working copy button.
-6. Keep it mobile-first.
-
-After that:
-
-1. Add an AI route for extraction and drafting.
-2. Add structured output validation.
-3. Add operator setup persistence.
-4. Add lead tracking.
-5. Add quote links.
+1. Lead tracking and a status pipeline (new / needs info / quoted / follow-up / won / lost). Save each analyzed inquiry as a lead.
+2. Quote links (public quote page per lead).
+3. Backend persistence for operator profiles + leads (replace localStorage) once there are design partners; deploy to a URL for in-person demos.
+4. Optional: prompt-cache the operator system prompt to cut per-inquiry cost.
 
 ## Design Principles
 
