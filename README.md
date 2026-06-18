@@ -14,6 +14,17 @@ Read these before making product decisions:
 - [docs/03-go-to-market.md](docs/03-go-to-market.md) - validation plan, first customers, pricing, and sales script
 - [docs/04-research-notes.md](docs/04-research-notes.md) - assumptions, sources, and open questions
 - [docs/05-agent-handoff.md](docs/05-agent-handoff.md) - compact context for Claude Code, Codex, or other agents
+- [docs/06-decision-log.md](docs/06-decision-log.md) - running log of major directions and pivots, with dates
+
+## Current Direction (2026-06-18)
+
+We are **not** building lead tracking or a CRM on top of the manual copy-paste
+flow — that adds work for the captain instead of removing it. The merged
+prototype is a test rig to validate one thing: are the AI drafts good enough to
+send? Next: validate with a real captain, then pursue channel integration (the
+version that actually takes work off the plate). See
+[docs/06-decision-log.md](docs/06-decision-log.md) and the "Strategic Direction"
+section of [docs/05-agent-handoff.md](docs/05-agent-handoff.md).
 
 ## Current Product Wedge
 
