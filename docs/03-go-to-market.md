@@ -73,7 +73,7 @@ Pricing should be tested in calls. Do not over-optimize before real operator fee
 ## Sales Sequence
 
 1. Build interactive demo.
-2. Identify 25 operators.
+2. Identify 25 operators. _(Running list: [`docs/leads/`](leads/) — 38 prospects compiled, owner-operated WhatsApp/phone bookers prioritized.)_
 3. Capture public info: WhatsApp number, Instagram, website, island, trip types.
 4. Reach out to 10 with a specific, non-generic message.
 5. Offer to demo with their real inquiries.
