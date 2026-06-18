@@ -10,7 +10,10 @@ Before product or implementation work, read:
 
 1. `README.md`
 2. `docs/05-agent-handoff.md`
-3. The specific doc under `docs/` that matches the task
+3. `docs/06-decision-log.md` — the running record of directions taken and pivots made, newest first. Read it to avoid re-proposing something we already decided against.
+4. The specific doc under `docs/` that matches the task
+
+When a session settles a significant product, strategic, or architectural decision (a direction chosen, a pivot, a tradeoff resolved), append a dated, newest-first entry to `docs/06-decision-log.md` saying what was decided and why — and update `README.md` / `docs/05-agent-handoff.md` if the direction changed. Supersede old entries with new ones rather than deleting them. (A Stop hook in `.claude/settings.json` reminds you, but the convention holds even if that hook is disabled.) Do not log routine task completions or edits.
 
 Project constraints:
 
