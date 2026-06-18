@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sid=$(jq -r '.session_id // \"unknown\"'); f=\"/tmp/claude-declog-${sid}\"; [ -f \"$f\" ] && exit 0; touch \"$f\"; printf '%s' '{\"decision\":\"block\",\"reason\":\"Before ending this turn: did this session settle a significant product, strategic, or architectural decision (a direction chosen, a pivot made, a tradeoff resolved)? If YES, append a dated, newest-first entry to docs/06-decision-log.md saying what was decided and why; also update README.md and docs/05-agent-handoff.md if the direction changed, then commit and push. If NO significant decision was made, just continue and end normally. Do NOT log routine task completions, edits, or merges that carry no decision.\"}'",
+            "statusMessage": "Checking for decisions to log..."
+          }
+        ]
+      }
+    ]
+  }
+}
