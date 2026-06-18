@@ -52,12 +52,48 @@ Structure:
 
 Operator setup is stored in the browser (localStorage) only — there is no backend persistence yet, so profiles don't sync across devices. Without `ANTHROPIC_API_KEY` the app still works end-to-end via the rules fallback.
 
-## Next Recommended Product Work
+## Strategic Direction (2026-06-18)
 
-1. Lead tracking and a status pipeline (new / needs info / quoted / follow-up / won / lost). Save each analyzed inquiry as a lead.
-2. Quote links (public quote page per lead).
-3. Backend persistence for operator profiles + leads (replace localStorage) once there are design partners; deploy to a URL for in-person demos.
-4. Optional: prompt-cache the operator system prompt to cut per-inquiry cost.
+We pressure-tested the previously-recommended "lead tracking + CRM" direction and
+**decided against it.** The reasoning matters, so it is recorded here:
+
+- The current copy-paste flow does not take work off the captain's plate — it
+  relocates it. Captain switches apps, pastes the inquiry, reads the draft,
+  copies it, switches back, pastes, sends. For quick inquiries that is *more*
+  steps, not fewer.
+- Layering lead/contact tracking on top of a manual flow makes it worse: it asks
+  the captain to also be a data-entry clerk. That is a CRM, i.e. work added, not
+  removed. It is the dashboard-of-empty-tables trap the design principles warn
+  about.
+- "The product must be more automatic" and "do not build a CRM" are the same
+  problem with the same fix. Memory feels like manual data entry only because
+  messages do not flow through our system. Once they do (real channel
+  integration), inbound arrives automatically, the draft is waiting for one-tap
+  approval, and contact/trip history becomes a **byproduct of the message pipe** —
+  the captain maintains nothing. The "CRM" builds itself.
+
+### What the merged prototype actually is
+
+A **test rig for one question: are the AI drafts good enough that a captain would
+actually send them?** It is not the product. It validates the intelligence, not
+the workflow.
+
+### Next moves (in order)
+
+1. **Do not build more features on the manual copy-paste flow.** Specifically: no
+   lead tracking, no contact CRM, no status pipeline.
+2. **Validate draft quality with one real Nassau captain.** Near-zero build, a few
+   days. Answers whether the intelligence is worth automating before any
+   integration work is sunk.
+3. **If drafts are send-ready, the next build is channel integration, not CRM** —
+   the version that actually removes labor and makes the memory layer free.
+   Before committing, pressure-test the WhatsApp path: real cost/friction of the
+   Business API (business verification, template-message rules, 24-hour session
+   window, possible number migration — the reasons it was deferred) and whether a
+   lighter-weight automatic channel exists.
+
+Deferred (revisit only after the above): quote links, backend persistence,
+prompt-caching the operator system prompt.
 
 ## Design Principles
 
