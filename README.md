@@ -15,6 +15,8 @@ Read these before making product decisions:
 - [docs/04-research-notes.md](docs/04-research-notes.md) - assumptions, sources, and open questions
 - [docs/05-agent-handoff.md](docs/05-agent-handoff.md) - compact context for Claude Code, Codex, or other agents
 - [docs/06-decision-log.md](docs/06-decision-log.md) - running log of major directions and pivots, with dates
+- [docs/07-cold-outreach-playbook.md](docs/07-cold-outreach-playbook.md) - WhatsApp-first cold outreach tactics, templates, and tracking for the prospect list
+- [docs/leads/](docs/leads/) - captain outreach prospect list (business source of truth for sales targets)
 
 ## Current Direction (2026-06-18)
 

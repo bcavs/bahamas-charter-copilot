@@ -10,6 +10,32 @@ it, so the reasoning behind past pivots stays visible.
 
 ---
 
+## 2026-06-18 — Cold outreach: WhatsApp-first, show-don't-ask
+
+**Decision:** First-touch outreach to the prospect list runs **WhatsApp-first**,
+opening with a **pre-built mini-demo** for each High-priority captain rather than
+asking them for their real inquiries.
+
+**Why:** These captains book on WhatsApp, so a clean, fast, personalized WhatsApp
+message *is* the product demo — it proves "fast professional reply" and dogfoods
+the exact workflow we sell. Asking a cold contact to send inquiries is homework
+and friction; showing the copilot's drafted reply on their own public trips is
+the wow up front. The mock stays on-brand with the trust model (copilot, not
+bot; never invents a final price — the rate stays the captain's to confirm).
+
+**What this means going forward:**
+
+- Reachable-now leads (have a WhatsApp/phone number) get worked first; IG/web-only
+  leads are parked for a later Instagram-DM pass once a number is found.
+- Get Hooked (familial connection) is the warm beachhead and referral source, used
+  to pressure-test messaging before going cold.
+- Touches and replies are tracked back into `docs/leads/captain-outreach-list.csv`
+  (`Status` / `Last Contact Date` / `Next Follow-up` / `Response`).
+
+**See:** `docs/07-cold-outreach-playbook.md` (templates, cadence, worked examples).
+
+---
+
 ## 2026-06-18 — Drop the lead-tracking / CRM direction
 
 **Decision:** Do not build lead tracking, contact CRM, or a status pipeline on
