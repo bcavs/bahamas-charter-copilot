@@ -24,6 +24,33 @@ WhatsApp to a public business number is normal in this market.
   Boat Tours, Eleuthera's Salty Discoveries, Capt. Kid, Abaco Off The Charts):
   parked for a later Instagram-DM pass; fill in a number first where possible.
 
+## Sending mechanics — who actually sends
+
+**For cold outreach: you send from your own phone. We do not automate sends.**
+
+The reachable-now demos are pre-written in
+[`docs/leads/demo-pack.md`](leads/demo-pack.md) so sending is paste-and-go.
+
+Why not wire up an automated sender (incl. having an agent send for you):
+
+- The official **WhatsApp Business Platform (Cloud API)** requires Meta business
+  verification, a dedicated number (can't reuse a number already on the consumer
+  app — "number migration"), and — critically — **proactive first-contact
+  messages must use pre-approved templates**, with free-form messaging only
+  inside the 24-hour window *after the customer replies*. Meta policy prohibits
+  unsolicited cold messaging; cold template blasts risk the number being banned.
+- **Unofficial WhatsApp-Web automation** violates WhatsApp ToS and risks a
+  permanent ban of your number. Not worth it.
+- Hand-sending ~30 leads over a few days is trivial, carries zero ban/policy
+  risk, needs no setup wait, and is on-brand: a human-sent first message *is* the
+  copilot story (copilot, not bot).
+
+**Where the automated channel belongs:** later, on **warm/inbound** traffic —
+replying to customers who messaged *you* first, inside the 24-hour window, with
+the copilot drafting and you one-tap-approving. That is the "channel
+integration" phase in `docs/05-agent-handoff.md`, and the compliant place to
+invest in the Business API. Not for cold prospecting.
+
 ## The core mechanic: show, don't ask
 
 Do **not** open by asking for their real inquiries (that's homework on a cold
